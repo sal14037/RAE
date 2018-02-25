@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<parameters>
+	<parameter name="randomSeed" displayName="Default Random Seed"
+		type="int" defaultValue="__NULL__" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="gridHeight" displayName="Grid Height" type="int"
+		defaultValue="256" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="gridWidth" displayName="Grid Width" type="int"
+		defaultValue="256" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="mergeTimeMin" displayName="Merge Time Min"
+		type="int" defaultValue="5" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="mergeTimeMax" displayName="Merge Time Max"
+		type="int" defaultValue="5" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="initialBanks" displayName="Initial Banks"
+		type="int" defaultValue="100" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="initialBanks" displayName="Initial Banks"
+		type="int" defaultValue="100" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="max_positive_fluctuation" displayName="Maximum Positive Fluctuation"
+		type="double" defaultValue="1.005" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" />
+	<parameter name="max_negative_fluctuation" displayName="Maximum Negative Fluctuation"
+		type="double" defaultValue="0.9991" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" />
+	<parameter name="fixedCost" displayName="Regulatory Cost"
+		type="int" defaultValue="10" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+</parameters>
+
+

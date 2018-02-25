@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<sweep runs="1">
+	<parameter name="gridHeight" type="constant" constant_type="int"
+		value="256"></parameter>
+	<parameter name="divideTimeMax" type="constant"
+		constant_type="int" value="30"></parameter>
+	<parameter name="divideTimeMin" type="constant"
+		constant_type="int" value="10"></parameter>
+	<parameter name="moveTimeMin" type="constant" constant_type="int"
+		value="1"></parameter>
+	<parameter name="moveTimeMax" type="constant" constant_type="int"
+		value="5"></parameter>
+	<parameter name="initialBanks" type="constant" constant_type="int"
+		value="10"></parameter>
+	<parameter name="gridWidth" type="constant" constant_type="int"
+		value="256"></parameter>
+</sweep>
