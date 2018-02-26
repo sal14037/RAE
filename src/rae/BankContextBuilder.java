@@ -28,7 +28,7 @@ import repast.simphony.space.grid.WrapAroundBorders;
  */
 public class BankContextBuilder extends DefaultContext implements ContextBuilder<Bank> {
 
-	final static Logger logger = Logger.getLogger(BankContextBuilder.class);
+	private final static Logger LOGGER = Logger.getLogger(BankContextBuilder.class);
 
 	@Override
 	public Context build(Context<Bank> context) {
@@ -53,39 +53,46 @@ public class BankContextBuilder extends DefaultContext implements ContextBuilder
 			RunEnvironment.getInstance().endAt(20);
 		}
 
-		ISchedule schedule = RunEnvironment.getInstance().getCurrentSchedule();
-		ScheduleParameters params = ScheduleParameters.createRepeating(1, 1, ScheduleParameters.FIRST_PRIORITY);
-		schedule.schedule(params, this, "globalStep");
+		scheduleGlobalStep();
 
 		return context;
 	}
 
+	private void scheduleGlobalStep() {
+		ISchedule schedule = RunEnvironment.getInstance().getCurrentSchedule();
+		ScheduleParameters params = ScheduleParameters.createRepeating(1, 1, ScheduleParameters.FIRST_PRIORITY);
+		schedule.schedule(params, this, "globalStep");
+	}
+
 	public void globalStep() {
+		Iterator<Bank> iter = RunState.getInstance().getMasterContext().getObjects(Bank.class).iterator();
+		while (iter.hasNext()) {
+			Bank b = iter.next();
+			b.marketFluctuation(generateFluctuation());
+			if (b.isBankcrupt()) {
+				RunState.getInstance().getMasterContext().remove(b);
+				LOGGER.info("Bank (" + b.getId() + ") went bankcrupt!");
+			}
+		}
+	}
+
+	public double generateFluctuation() {
 		Parameters p = RunEnvironment.getInstance().getParameters();
-		double max_positive_fluctuation = (Double) p.getValue("max_positive_fluctuation");
-		double max_negative_fluctuation = (Double) p.getValue("max_negative_fluctuation");
+		double maxPositiveFluctuation = (Double) p.getValue("max_positive_fluctuation");
+		double maxNegativeFluctuation = (Double) p.getValue("max_negative_fluctuation");
 
 		double fluctuation = 1;
 		int direction = RandomHelper.nextIntFromTo(-1, 1);
 		if (direction == -1) {
-			double fluctuationminus = RandomHelper.nextDoubleFromTo(0.99999, max_negative_fluctuation);
-			fluctuation = fluctuationminus;
-			logger.info("Market - " + fluctuationminus);
+			double fluctuationMinus = RandomHelper.nextDoubleFromTo(0.99999, maxNegativeFluctuation);
+			fluctuation = fluctuationMinus;
+			LOGGER.info("Market - " + fluctuationMinus);
 		} else {
-			double fluctuationplus = RandomHelper.nextDoubleFromTo(1.00001, max_positive_fluctuation);
-			fluctuation = fluctuationplus;
-			logger.info("Market + " + fluctuationplus);
-
+			double fluctuationPlus = RandomHelper.nextDoubleFromTo(1.00001, maxPositiveFluctuation);
+			fluctuation = fluctuationPlus;
+			LOGGER.info("Market + " + fluctuationPlus);
 		}
-		Iterator<Bank> iter = RunState.getInstance().getMasterContext().getObjects(Bank.class).iterator();
-		while (iter.hasNext()) {
-			Bank b = iter.next();
-			b.marketFluctuation(fluctuation);
-			if (b.isBankcrupt()) {
-				RunState.getInstance().getMasterContext().remove(b);
-				logger.info("Bank (" + b.getId() + ") went bankcrupt!");
-			}
-		}
-
+		return fluctuation;
 	}
+
 }

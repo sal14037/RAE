@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.environment.RunState;
 import repast.simphony.engine.schedule.ScheduledMethod;
@@ -21,7 +20,7 @@ import repast.simphony.random.RandomHelper;
  */
 public class Bank {
 
-	final static Logger logger = Logger.getLogger(Bank.class);
+	private final static Logger LOGGER = Logger.getLogger(Bank.class);
 
 	private final int id;
 
@@ -36,7 +35,7 @@ public class Bank {
 	private int securities;
 
 	// Share of non performing loans, 0-100
-	private int NPL;
+	private int npl;
 
 	private int liabilites;
 	private int deposits;
@@ -48,7 +47,7 @@ public class Bank {
 	private int variableCost;
 	private int fixedCost;
 
-	private boolean bailout = false;
+	private boolean bailout;
 
 	public Bank(int id) {
 		Parameters p = RunEnvironment.getInstance().getParameters();
@@ -59,9 +58,9 @@ public class Bank {
 		int mergeTimeMax = (Integer) p.getValue("mergeTimeMax");
 		this.mergeTime = RandomHelper.nextIntFromTo(mergeTimeMin, mergeTimeMax);
 
-		this.revenue = RandomHelper.nextIntFromTo(0, 100);
-		this.fixedCost = RandomHelper.nextIntFromTo(0, 50) + ((Integer) p.getValue("fixedCost"));
-		this.variableCost = RandomHelper.nextIntFromTo(0, 50);
+		this.revenue = RandomHelper.nextIntFromTo(1, 100);
+		this.fixedCost = RandomHelper.nextIntFromTo(1, 50) + ((Integer) p.getValue("fixedCost"));
+		this.variableCost = RandomHelper.nextIntFromTo(1, 50);
 
 		this.profit = revenue - (variableCost + fixedCost);
 
@@ -70,7 +69,7 @@ public class Bank {
 		this.securities = RandomHelper.nextIntFromTo(1, 500);
 		this.assets = customerLoans + securities;
 
-		this.NPL = RandomHelper.nextIntFromTo(1, 25);
+		this.npl = RandomHelper.nextIntFromTo(1, 25);
 
 		int shareOfEquity = RandomHelper.nextIntFromTo(1, 50);
 		this.equity = assets * shareOfEquity / 100;
@@ -90,10 +89,9 @@ public class Bank {
 				List<Bank> possibleMergers = findPossibleMergers();
 				if (possibleMergers.size() > 0) {
 					Object obj = possibleMergers.get(0);
-					Context<Bank> context = RunState.getInstance().getMasterContext();
 					merge((Bank) obj);
 					RunState.getInstance().getMasterContext().remove(obj);
-					logger.info("MERGE Bank (" + this.getId() + ") & Bank (" + ((Bank) obj).getId() + ")");
+					LOGGER.info("MERGE Bank (" + this.getId() + ") & Bank (" + ((Bank) obj).getId() + ")");
 				}
 				mergeCD = mergeTime;
 			} else {
@@ -130,47 +128,47 @@ public class Bank {
 		revalue();
 	}
 
-	private List<Bank> findPossibleMergers() {
-
-		List<Bank> allBanks = new ArrayList<Bank>();
+	private List<Bank> getAllBanks() {
 		Iterator<Bank> iter = RunState.getInstance().getMasterContext().getObjects(Bank.class).iterator();
-
+		List<Bank> allBanks = new ArrayList<Bank>();
 		while (iter.hasNext()) {
 			Bank b = iter.next();
 			if (!b.equals(this)) {
 				allBanks.add(b);
 			}
 		}
+		return allBanks;
+	}
 
+	private List<Bank> findPossibleMergers() {
 		List<Bank> possibleMergers = new ArrayList<Bank>();
-
-		for (Bank bank : allBanks) {
-			if (this.getAssets() > bank.getAssets()) {
-				int synergy = 0;
-
-				if (this.variableCost < bank.getVariableCost()) {
-					synergy++;
-				}
-				if ((this.profit + bank.getProfit()) > this.profit) {
-					synergy++;
-				}
-				if ((bank.getRevenue() - bank.getVariableCost()) > 0) {
-					synergy++;
-				}
-				if (bank.debtEquityRatio() > 200) {
-					synergy--;
-				}
-				if (bank.getNPL() > 60) {
-					synergy--;
-				}
-
-				if (synergy > 0) {
-					possibleMergers.add(bank);
-				}
+		for (Bank bank : getAllBanks()) {
+			if (this.getAssets() > bank.getAssets() && calculateSynergy(bank) > 0) {
+				possibleMergers.add(bank);
 			}
 		}
 		Collections.shuffle(possibleMergers);
 		return possibleMergers;
+	}
+
+	private int calculateSynergy(Bank bank) {
+		int synergy = 0;
+		if (this.variableCost < bank.getVariableCost()) {
+			synergy++;
+		}
+		if ((this.profit + bank.getProfit()) > this.profit) {
+			synergy++;
+		}
+		if ((bank.getRevenue() - bank.getVariableCost()) > 0) {
+			synergy++;
+		}
+		if (bank.debtEquityRatio() > 200) {
+			synergy--;
+		}
+		if (bank.getNPL() > 60) {
+			synergy--;
+		}
+		return synergy;
 	}
 
 	public boolean isBankcrupt() {
@@ -248,11 +246,11 @@ public class Bank {
 	}
 
 	public int getNPL() {
-		return NPL;
+		return npl;
 	}
 
 	public void setNPL(int nPL) {
-		NPL = nPL;
+		npl = nPL;
 	}
 
 	public int getDeposits() {
