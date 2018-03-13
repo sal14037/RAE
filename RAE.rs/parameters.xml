@@ -18,6 +18,12 @@
 						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
 									
 		/>
+				<parameter name="maxBankSize" displayName="Maximum Bank Size" type="int" 
+						defaultValue="110000" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
+									
+		/>
 				<parameter name="mergeTimeMin" displayName="Merge Time Min" type="int" 
 						defaultValue="5" 
 						isReadOnly="false" 
@@ -48,10 +54,22 @@
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
 		/>
+				<parameter name="start_tick_disruption" displayName="Disruption Start Tick" type="int" 
+						defaultValue="4" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
+									
+		/>
 				<parameter name="gridWidth" displayName="Grid Width" type="int" 
 						defaultValue="256" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
+									
+		/>
+				<parameter name="magnitude_disruption" displayName="Disruption Magnitude" type="double" 
+						defaultValue="0.5" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
 									
 		/>
 		</parameters>

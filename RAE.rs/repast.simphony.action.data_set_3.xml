@@ -1,5 +1,5 @@
 <repast.simphony.data2.engine.DataSetDescriptor simphonyVersion="2.5.0">
-  <name>A Data Set 3</name>
+  <name>Market Share Data Set</name>
   <type>AGGREGATE</type>
   <inclTick>true</inclTick>
   <inclBatchRun>false</inclBatchRun>
@@ -11,7 +11,7 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>-978780188</hashCode>
+    <hashCode>-755270627</hashCode>
   </scheduleParams>
   <atEnd>false</atEnd>
   <methodDataSources class="linked-hash-map"/>
@@ -19,17 +19,10 @@
   <customNADataSources class="linked-hash-map"/>
   <customAggDataSources class="linked-hash-map">
     <entry>
-      <string>Small Bank Count</string>
+      <string>Large Banks Market Share</string>
       <repast.simphony.data2.engine.CustomDataSourceDefinition>
-        <id>Small Bank Count</id>
-        <dsClassName>rae.SmallBankCountDataSource</dsClassName>
-      </repast.simphony.data2.engine.CustomDataSourceDefinition>
-    </entry>
-    <entry>
-      <string>Large Bank Count</string>
-      <repast.simphony.data2.engine.CustomDataSourceDefinition>
-        <id>Large Bank Count</id>
-        <dsClassName>rae.LargeBankCountDataSource</dsClassName>
+        <id>Large Banks Market Share</id>
+        <dsClassName>rae.LargeBankMarketShareDataSource</dsClassName>
       </repast.simphony.data2.engine.CustomDataSourceDefinition>
     </entry>
   </customAggDataSources>

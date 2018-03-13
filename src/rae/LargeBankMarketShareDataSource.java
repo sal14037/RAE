@@ -12,11 +12,11 @@ import repast.simphony.data2.AggregateDataSource;
  * @author Thomas Salzer
  *
  */
-public class SmallBankCountDataSource implements AggregateDataSource {
+public class LargeBankMarketShareDataSource implements AggregateDataSource {
 
 	@Override
 	public String getId() {
-		return "Small Bank Count";
+		return "Large Banks Market Share";
 	}
 
 	@Override
@@ -33,16 +33,17 @@ public class SmallBankCountDataSource implements AggregateDataSource {
 	@Override
 	public Object get(Iterable<?> objs, int size) {
 		Context context = (Context) objs.iterator().next();
-		double numCells = context.size() - 1;
 		Iterator<Bank> iter = context.getObjects(Bank.class).iterator();
-		int numBanks = 0;
+		int largeAssets = 0;
+		int totalAssets = 0;
 		while (iter.hasNext()) {
 			Bank b = iter.next();
-			if (b.getAssets() < 40000) {
-				numBanks++;
+			totalAssets += b.getAssets();
+			if (b.getAssets() >= 100000) {
+				largeAssets += b.getAssets();
 			}
 		}
-		return numBanks;
+		return ((double) largeAssets / totalAssets) * 100;
 	}
 
 	@Override

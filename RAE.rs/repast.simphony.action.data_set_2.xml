@@ -1,5 +1,5 @@
 <repast.simphony.data2.engine.DataSetDescriptor simphonyVersion="2.5.0">
-  <name>A Data Set</name>
+  <name>Agent Count By Size Data Set</name>
   <type>AGGREGATE</type>
   <inclTick>true</inclTick>
   <inclBatchRun>false</inclBatchRun>
@@ -11,19 +11,33 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>749838983</hashCode>
+    <hashCode>-978780188</hashCode>
   </scheduleParams>
   <atEnd>false</atEnd>
   <methodDataSources class="linked-hash-map"/>
-  <countSources class="linked-hash-map">
-    <entry>
-      <string>Bank Count</string>
-      <repast.simphony.data2.engine.CountSourceDefinition>
-        <typeName>rae.Bank</typeName>
-        <id>Bank Count</id>
-      </repast.simphony.data2.engine.CountSourceDefinition>
-    </entry>
-  </countSources>
+  <countSources class="linked-hash-map"/>
   <customNADataSources class="linked-hash-map"/>
-  <customAggDataSources class="linked-hash-map"/>
+  <customAggDataSources class="linked-hash-map">
+    <entry>
+      <string>Small Bank Count</string>
+      <repast.simphony.data2.engine.CustomDataSourceDefinition>
+        <id>Small Bank Count</id>
+        <dsClassName>rae.SmallBankCountDataSource</dsClassName>
+      </repast.simphony.data2.engine.CustomDataSourceDefinition>
+    </entry>
+    <entry>
+      <string>Large Bank Count</string>
+      <repast.simphony.data2.engine.CustomDataSourceDefinition>
+        <id>Large Bank Count</id>
+        <dsClassName>rae.LargeBankCountDataSource</dsClassName>
+      </repast.simphony.data2.engine.CustomDataSourceDefinition>
+    </entry>
+    <entry>
+      <string>Medium Bank Count</string>
+      <repast.simphony.data2.engine.CustomDataSourceDefinition>
+        <id>Medium Bank Count</id>
+        <dsClassName>rae.MediumBankCountDataSource</dsClassName>
+      </repast.simphony.data2.engine.CustomDataSourceDefinition>
+    </entry>
+  </customAggDataSources>
 </repast.simphony.data2.engine.DataSetDescriptor>

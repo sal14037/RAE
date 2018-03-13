@@ -38,7 +38,7 @@ public class LargeBankCountDataSource implements AggregateDataSource {
 		int numBanks = 0;
 		while (iter.hasNext()) {
 			Bank b = iter.next();
-			if (b.getAssets() > 750) {
+			if (b.getAssets() > 100000) {
 				numBanks++;
 			}
 		}

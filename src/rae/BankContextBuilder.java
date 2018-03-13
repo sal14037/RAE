@@ -30,6 +30,8 @@ public class BankContextBuilder extends DefaultContext implements ContextBuilder
 
 	private final static Logger LOGGER = Logger.getLogger(BankContextBuilder.class);
 
+	private int tick;
+
 	@Override
 	public Context build(Context<Bank> context) {
 		Parameters p = RunEnvironment.getInstance().getParameters();
@@ -37,6 +39,7 @@ public class BankContextBuilder extends DefaultContext implements ContextBuilder
 		int gridWidth = (Integer) p.getValue("gridWidth");
 		int gridHeight = (Integer) p.getValue("gridHeight");
 		int initialBanks = (Integer) p.getValue("initialBanks");
+		this.tick = 0;
 
 		NetworkBuilder<Bank> netBuilder = new NetworkBuilder<Bank>("Bank network", context, true);
 		netBuilder.buildNetwork();
@@ -50,7 +53,7 @@ public class BankContextBuilder extends DefaultContext implements ContextBuilder
 		}
 
 		if (RunEnvironment.getInstance().isBatch()) {
-			RunEnvironment.getInstance().endAt(20);
+			RunEnvironment.getInstance().endAt(50);
 		}
 
 		scheduleGlobalStep();
@@ -60,20 +63,27 @@ public class BankContextBuilder extends DefaultContext implements ContextBuilder
 
 	private void scheduleGlobalStep() {
 		ISchedule schedule = RunEnvironment.getInstance().getCurrentSchedule();
-		ScheduleParameters params = ScheduleParameters.createRepeating(1, 1, ScheduleParameters.FIRST_PRIORITY);
+		ScheduleParameters params = ScheduleParameters.createRepeating(1, 1, 1);
 		schedule.schedule(params, this, "globalStep");
 	}
 
 	public void globalStep() {
+		Parameters p = RunEnvironment.getInstance().getParameters();
+
+		int startTickDisruption = (int) p.getValue("start_tick_disruption");
 		Iterator<Bank> iter = RunState.getInstance().getMasterContext().getObjects(Bank.class).iterator();
+		System.out.println(tick);
+		System.out.println(startTickDisruption);
+		double fluctuation = generateFluctuation();
+		if (tick == startTickDisruption && tick != 0) {
+			fluctuation = generateDisruption();
+			LOGGER.info("CRASH!");
+		}
 		while (iter.hasNext()) {
 			Bank b = iter.next();
-			b.marketFluctuation(generateFluctuation());
-			if (b.isBankcrupt()) {
-				RunState.getInstance().getMasterContext().remove(b);
-				LOGGER.info("Bank (" + b.getId() + ") went bankcrupt!");
-			}
+			b.marketFluctuation(fluctuation);
 		}
+		tick++;
 	}
 
 	public double generateFluctuation() {
@@ -93,6 +103,12 @@ public class BankContextBuilder extends DefaultContext implements ContextBuilder
 			LOGGER.info("Market + " + fluctuationPlus);
 		}
 		return fluctuation;
+	}
+
+	public double generateDisruption() {
+		Parameters p = RunEnvironment.getInstance().getParameters();
+		double magnitudeDisruption = (Double) p.getValue("magnitude_disruption");
+		return magnitudeDisruption;
 	}
 
 }

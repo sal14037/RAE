@@ -1,0 +1,13 @@
+<repast.simphony.data2.engine.FileSinkDescriptor simphonyVersion="2.5.0">
+  <name>Average Bank Size File Sink</name>
+  <dataSet>Average Bank Size Data Set</dataSet>
+  <delimiter>,</delimiter>
+  <format>TABULAR</format>
+  <sourceIds class="linked-hash-set">
+    <string>tick</string>
+    <string>Mean Bank Size</string>
+    <string>Average Bank Size</string>
+  </sourceIds>
+  <fileName>ModelOutputBankSize.txt</fileName>
+  <addTimeStamp>true</addTimeStamp>
+</repast.simphony.data2.engine.FileSinkDescriptor>

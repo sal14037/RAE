@@ -1,0 +1,14 @@
+<repast.simphony.data2.engine.FileSinkDescriptor simphonyVersion="2.5.0">
+  <name>Agent Count By Size File Sink</name>
+  <dataSet>Agent Count By Size Data Set</dataSet>
+  <delimiter>,</delimiter>
+  <format>TABULAR</format>
+  <sourceIds class="linked-hash-set">
+    <string>Small Bank Count</string>
+    <string>Large Bank Count</string>
+    <string>tick</string>
+    <string>Medium Bank Count</string>
+  </sourceIds>
+  <fileName>ModelOutputBankNumbers.txt</fileName>
+  <addTimeStamp>true</addTimeStamp>
+</repast.simphony.data2.engine.FileSinkDescriptor>

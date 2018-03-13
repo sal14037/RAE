@@ -54,6 +54,8 @@ public class Bank {
 
 		this.id = id;
 
+		int maxBankSize = (Integer) p.getValue("maxBankSize");
+
 		int mergeTimeMin = (Integer) p.getValue("mergeTimeMin");
 		int mergeTimeMax = (Integer) p.getValue("mergeTimeMax");
 		this.mergeTime = RandomHelper.nextIntFromTo(mergeTimeMin, mergeTimeMax);
@@ -65,13 +67,13 @@ public class Bank {
 		this.profit = revenue - (variableCost + fixedCost);
 
 		// Other distributions Logarithmic, etc.
-		this.customerLoans = RandomHelper.nextIntFromTo(1, 500);
-		this.securities = RandomHelper.nextIntFromTo(1, 500);
+		this.customerLoans = RandomHelper.nextIntFromTo(1, maxBankSize / 2);
+		this.securities = RandomHelper.nextIntFromTo(1, maxBankSize / 2);
 		this.assets = customerLoans + securities;
 
 		this.npl = RandomHelper.nextIntFromTo(1, 25);
 
-		int shareOfEquity = RandomHelper.nextIntFromTo(1, 50);
+		int shareOfEquity = RandomHelper.nextIntFromTo(10, 30);
 		this.equity = assets * shareOfEquity / 100;
 		this.deposits = assets * (100 - shareOfEquity) / 100;
 		this.liabilites = equity + deposits;
@@ -98,14 +100,17 @@ public class Bank {
 				mergeCD--;
 			}
 		} else {
+			this.die();
+			LOGGER.info("Bank (" + this.getId() + ") went bankcrupt!");
 			this.bailout = true;
 		}
 
 	}
 
 	public void marketFluctuation(double fluctuation) {
-		this.setNPL((int) (this.getNPL() * (1 / fluctuation)));
+		this.setNPL((int) (this.getNPL() * 1 / fluctuation));
 		this.setSecurities((int) (this.getSecurities() * fluctuation));
+		this.setEquity((int) (this.getEquity() * fluctuation));
 	}
 
 	private void revalue() {
@@ -172,10 +177,13 @@ public class Bank {
 	}
 
 	public boolean isBankcrupt() {
-		if (this.getAssets() < 0)
+		if (this.getAssets() < 1)
 			return true;
-		if (this.getEquity() < 0)
+		if (this.debtEquityRatio() > 5)
 			return true;
+		/*
+		 * if ((double) this.getEquity() / this.getLiabilites() < 0.05) return true;
+		 */
 		if (this.getNPL() > 80)
 			return true;
 		return false;
@@ -295,5 +303,9 @@ public class Bank {
 			return false;
 		Bank other = (Bank) obj;
 		return other.id == id;
+	}
+
+	public void die() {
+		RunState.getInstance().getMasterContext().remove(this);
 	}
 }

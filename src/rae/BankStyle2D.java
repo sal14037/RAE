@@ -18,9 +18,9 @@ public class BankStyle2D extends DefaultStyleOGL2D {
 	@Override
 	public Color getColor(Object agent) {
 		int dimensions = ((Bank) agent).getAssets();
-		if (dimensions >= 10000)
+		if (dimensions >= 100000)
 			return new Color(200, 0, 0);
-		else if (dimensions >= 5000)
+		else if (dimensions >= 40000)
 			return new Color(0, 200, 0);
 		return new Color(0, 0, 200);
 
@@ -28,8 +28,14 @@ public class BankStyle2D extends DefaultStyleOGL2D {
 
 	@Override
 	public VSpatial getVSpatial(Object agent, VSpatial spatial) {
-		int dimensions = ((Bank) agent).getAssets() / 100;
+		int dimensions = ((Bank) agent).getAssets() / 1000;
 		spatial = shapeFactory.createRectangle(dimensions, dimensions);
+		if (dimensions > 300) {
+			spatial = shapeFactory.createRectangle(500, 500);
+		}
+		if (dimensions <= 10) {
+			spatial = shapeFactory.createRectangle(10, 10);
+		}
 		return spatial;
 	}
 }
